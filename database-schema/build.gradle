@@ -1,0 +1,17 @@
+group = "uk.gov.dft.bluebadge.databaseupgrade"
+version = "1.0.0"
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.github.marceloemanoel:gradle-migrations:0.2.1"
+    }
+}
+
+apply plugin: "migrations"
+
+dependencies {
+    migrationsDriver 'org.postgresql:postgresql:42.2.2'
+}

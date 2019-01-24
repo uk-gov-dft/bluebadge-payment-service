@@ -1,0 +1,238 @@
+import groovy.json.JsonSlurper
+
+buildscript {
+    ext {
+        springBootVersion = '2.0.4.RELEASE'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://artifactory.does.not.exist/artifactory/gradle-release'
+        }
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
+        classpath 'org.owasp:dependency-check-gradle:3.3.1'
+    }
+}
+
+plugins {
+    id 'com.github.sherter.google-java-format' version '0.6'
+    id "org.sonarqube" version "2.6.2"
+    id "com.gorylenko.gradle-git-properties" version "1.5.1"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'org.owasp.dependencycheck'
+
+group = 'uk.gov.dft.bluebadge'
+version = getTheVersion()
+sourceCompatibility = 1.8
+
+configurations.all {
+    resolutionStrategy {
+        // don't cache changing modules at all
+        cacheChangingModulesFor 0, 'seconds'
+    }
+    exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'https://artifactory.does.not.exist/artifactory/gradle-dev-local'
+    }
+    maven {
+        url  "https://dl.bintray.com/gov-uk-notify/maven" 
+    }
+}
+
+sourceSets {
+    main{
+        java {
+            srcDir 'src/main/java'
+            srcDir 'src/generated/java'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+    }
+}
+
+dependencies {
+    ext.commonVersion = '0.6.8-SNAPSHOT'
+
+    compile( group: 'uk.gov.dft.bluebadge', name: 'bluebadge-common', version: "${commonVersion}", changing: true ){
+        exclude group: 'org.mybatis.spring.boot', module: 'mybatis-spring-boot-starter'
+    }
+
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.5'
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
+    compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.3.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-aop')
+    compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2")
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '2.0.1.RELEASE'
+    compile('org.postgresql:postgresql:42.2.2')
+    compile 'com.amazonaws:aws-java-sdk-secretsmanager:1.11.484'
+
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
+
+    compileOnly ('org.projectlombok:lombok:1.16.22')
+    
+    runtime('org.springframework.boot:spring-boot-devtools')
+    runtime group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
+    runtime group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
+    runtime group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompileOnly ('org.projectlombok:lombok:1.16.22')
+}
+
+jacoco {
+    toolVersion = "0.8.1"
+}
+
+archivesBaseName = "message-service"
+compileJava.dependsOn 'googleJavaFormat'
+
+publishing {
+    publications {
+        project_service(MavenPublication) {
+            artifact ("service/build/database-schema/" + getTheVersion() + "_schema.zip") {
+                classifier "schema"
+            }
+            from components.java
+            artifactId "${archivesBaseName}"
+        }
+    }
+}
+
+def getTheVersion() {
+    def workingDir = new File("${project.projectDir}")
+    def version = 'git describe --abbrev=0'.execute(null, workingDir)
+    version.waitFor()
+    def versionSuffix = "UnknownA"
+    def result = 'git rev-parse --abbrev-ref HEAD'.execute(null, workingDir)
+    result.waitFor()
+    if (result.exitValue() == 0) {
+        def gitBranch = result.text.trim().replaceAll('/','_')
+        if (gitBranch == 'master') {
+            versionSuffix = ''
+        } else if (gitBranch == 'develop') {
+            versionSuffix = '-SNAPSHOT'
+        } else {
+            versionSuffix = '-' + gitBranch
+        }
+
+    }
+    return "${version.text.trim()}${versionSuffix}"
+}
+
+artifactory {
+    contextUrl = "https://artifactory.does.not.exist/artifactory"
+    //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-dev-local'
+            maven = true
+        }
+
+        publishArtifacts = true
+        publishPom = true
+        defaults {
+            publications('project_service')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+
+    resolve {
+        repository {
+            repoKey = 'gradle-release'
+            maven = true
+
+        }
+    }
+}
+
+task generateSwagger() {
+
+    doFirst {
+        mkdir(buildDir)
+        new File("${buildDir}/generated.zip").delete()
+    }
+    doLast {
+        def linkRequest = "curl -X POST https://generator.swagger.io/api/gen/servers/spring -H  accept:application/json -H  Content-Type:application/json --data @api-config.json -k".execute()
+
+        linkRequest.waitFor()
+
+        def json = new JsonSlurper().parseText(linkRequest.text)
+
+        def fileRequest = "curl -X GET https://generator.swagger.io/api/gen/download/${json.code} -H  accept:application/octet-stream -o ${buildDir}/generated.zip -k".execute()
+        fileRequest.waitFor()
+        println fileRequest.err.text
+        println fileRequest.text
+    }
+}
+
+task unzipGenerated(type: Copy) {
+    dependsOn tasks.findByName('generateSwagger')
+    new File("${buildDir}/unpacked").delete()
+    def zipFile = file("${buildDir}/generated.zip")
+    def outputDir = file("${buildDir}/unpacked")
+
+    from zipTree(zipFile)
+    into outputDir
+}
+
+task generateModel(dependsOn: 'unzipGenerated', type: Sync) {
+    group = "GenerateAPI"
+    from "${buildDir}/unpacked/spring-server/generated/src/main/java/uk/gov/dft/bluebadge/model/message"
+    include "**/*.java"
+    into "src/generated/java/uk/gov/dft/bluebadge/model/message"
+}
+
+task generateService(dependsOn: 'unzipGenerated', type: Sync) {
+    group = "GenerateAPI"
+    from "${buildDir}/unpacked/spring-server/generated/src/main/java/uk/gov/dft/bluebadge/service/message"
+    exclude '**/Swagger2SpringBoot.java'
+    exclude '**/RFC3339DateFormat.java'
+    exclude '**/*ApiController.java'
+    into "src/generated/java/uk/gov/dft/bluebadge/service/message"
+}
+
+task createDatabaseSchemaZip(type: Zip) {
+    def targetFilename = getTheVersion() + "_schema.zip"
+    from 'database-schema/'
+    include '*'
+    include '*/*'
+    archiveName targetFilename
+    destinationDir(file("service/build/database-schema"))
+}
+
+task outputComputedVersion {
+    def computedVersion = new File('VERSION-computed')
+    computedVersion.delete()
+    computedVersion.write(getTheVersion())
+    println(getTheVersion())
+}
+
+
+build.finalizedBy(outputComputedVersion)

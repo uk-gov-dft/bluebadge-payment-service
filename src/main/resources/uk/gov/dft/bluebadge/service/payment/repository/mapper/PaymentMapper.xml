@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="uk.gov.dft.bluebadge.service.payment.repository.mapper.PaymentMapper">
+
+    <!--<insert id="createMessage" parameterType="MessageEntity">-->
+        <!--INSERT INTO message-->
+        <!--(template, bbb_reference, notify_reference)-->
+        <!--VALUES (-->
+        <!--#{template},-->
+        <!--#{bbbReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler},-->
+        <!--#{notifyReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}-->
+        <!--)-->
+    <!--</insert>-->
+
+    <!--<select id="selectMessageByUuid" resultType="MessageEntity" parameterType="java.util.UUID" >-->
+        <!--SELECT m.template, m.bbb_reference, m.notify_reference-->
+        <!--FROM message m-->
+        <!--WHERE m.bbb_reference = #{uuid,jdbcType=OTHER}-->
+    <!--</select>-->
+
+</mapper>

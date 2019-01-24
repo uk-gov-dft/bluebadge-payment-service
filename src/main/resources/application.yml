@@ -1,0 +1,44 @@
+blue-badge:
+  auth-server:
+    url: http://localhost:8380/bb_auth
+    client-id: bb_user_management_id
+     ***REMOVED***
+  payment:
+    secretEnv: dev
+
+logging:
+  level:
+    root: ${APP_LOGGING_LEVEL:INFO}
+    sample.mybatis.mapper: WARN
+    uk.gov.dft.bluebadge.service: ${APP_LOGGING_LEVEL:DEBUG}
+
+management:
+  server:
+    port: 8981
+    servlet:
+      context-path: /manage
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+mybatis:
+  type-aliases-package: uk.gov.dft.bluebadge.service.message.repository.domain
+  type-handlers-package: uk.gov.dft.bluebadge.service.message.repository
+
+spring:
+  datasource:
+     ***REMOVED***
+    username: developer
+    url: jdbc:postgresql://127.0.0.1:5432/bb_dev?currentSchema=payment
+  jackson:
+    date-format: uk.gov.dft.bluebadge.common.api.RFC3339DateFormat
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8980
+  servlet:
+    context-path: /uk-gov-dft/payment-service/1.0.0
+
+springfox.documentation.swagger.v2.path: /api-docs

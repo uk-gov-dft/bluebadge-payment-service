@@ -1,0 +1,12 @@
+blue-badge:
+  auth-server:
+    url: http://authorisation-service:8380/bb_auth
+  payment:
+    secretEnv: ${bb_env}
+
+spring:
+  main:
+    banner-mode: "off"
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/bb_dev?currentSchema=payment
+
