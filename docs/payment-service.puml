@@ -1,0 +1,98 @@
+@startuml
+
+
+participant Browser order 10
+participant Citizen_WebApp order 20
+participant Application_Service order 30
+participant Payment_Service order 40
+participant PS_DB order 60
+participant ReferenceData_Service order 50
+participant AWS_Secret order 70
+participant GOV.UK_Pay order 80
+
+
+Browser -> Citizen_WebApp: POST /applications/payment
+activate Citizen_WebApp
+Citizen_WebApp -> Payment_Service: POST /payments\nBadgePaymentRequest
+
+activate Payment_Service
+Payment_Service -> ReferenceData_Service: GET /reference-data
+note right
+Obtain the
+price of a badge
+end note
+activate ReferenceData_Service
+ReferenceData_Service -> Payment_Service: ReferenceDataResponse
+database AWS_Secret
+deactivate
+Payment_Service -> AWS_Secret: retrieve API keys for LA
+activate AWS_Secret
+AWS_Secret -> Payment_Service: API Keys
+deactivate
+Payment_Service -> GOV.UK_Pay: POST /v1/payments\n{description, amount, return_url, customer_reference}
+
+activate GOV.UK_Pay
+GOV.UK_Pay -> Payment_Service: 201 CREATED {<font color=blue>payment_id, next_url<font color=black>}
+deactivate
+
+database PS_DB
+Payment_Service -> PS_DB: store <font color=blue>payment_id<font color=black>, la_short_code, customer_reference, cost
+activate PS_DB
+PS_DB -> Payment_Service: payment_journey_uuid (unique PK)
+deactivate
+Payment_Service -> Citizen_WebApp: payment_journey_uuid, <font color=blue>next_url
+deactivate
+Citizen_WebApp -> Citizen_WebApp: store payment_journey_uuid in session
+Citizen_WebApp -> Browser: 302 redirect to <font color=blue>next_url
+deactivate
+
+Browser -> GOV.UK_Pay: enter card details
+Browser -> GOV.UK_Pay: confirm payment
+
+GOV.UK_Pay -> GOV.UK_Pay: process payment
+GOV.UK_Pay -> Browser: redirect: return_url
+
+
+
+Browser -> Citizen_WebApp: GET return_url\n(/applications/payment-status)
+activate Citizen_WebApp
+Citizen_WebApp -> Payment_Service: GET /payments/{payment_journey_uuid}
+activate Payment_Service
+Payment_Service -> PS_DB: retrieve <font color=blue>payment_id<font color=black>, la_short_code using payment_journey_uuid
+activate PS_DB
+PS_DB -> Payment_Service: <font color=blue>payment_id
+deactivate
+Payment_Service -> AWS_Secret: retrieve API keys for LA
+activate AWS_Secret
+AWS_Secret -> Payment_Service: API Keys
+deactivate
+Payment_Service -> GOV.UK_Pay: GET /v1/payments/{<font color=blue>payment_id<font color=black>}
+activate GOV.UK_Pay
+GOV.UK_Pay -> Payment_Service: 200 OK {status: SUCCESS|FAIL}
+deactivate
+Payment_Service -> PS_DB: Update payment
+Payment_Service -> Citizen_WebApp: PaymentStatusResponse\n{success_status, customer_reference}
+deactivate
+Citizen_WebApp -> Citizen_WebApp: store PaymentStatusResponse\nin session
+activate Citizen_WebApp
+
+alt successful payment
+Citizen_WebApp -> Browser: redirect: continue application
+deactivate Citizen_WebApp
+else failed payment
+Citizen_WebApp -> Browser: redirect: proceed with payment page
+deactivate Citizen_WebApp
+
+end
+
+...5 minutes later...
+Browser -> Citizen_WebApp: POST /applications
+
+Citizen_WebApp -> Application_Service: POST /applications\n{Application, customer_reference}
+note left: User Submits Application\ncustomer_reference null when failed payment
+activate Application_Service
+Application_Service -> Citizen_WebApp: 200 OK
+deactivate
+Citizen_WebApp -> Browser: application submitted template
+
+@enduml
