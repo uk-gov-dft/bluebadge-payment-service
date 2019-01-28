@@ -109,7 +109,7 @@ jacoco {
     toolVersion = "0.8.1"
 }
 
-archivesBaseName = "message-service"
+archivesBaseName = "payment-service"
 compileJava.dependsOn 'googleJavaFormat'
 
 publishing {
