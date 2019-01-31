@@ -6,12 +6,14 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import uk.gov.dft.bluebadge.common.api.model.CommonResponse;
 
 @Builder
 @Getter
+@EqualsAndHashCode
 public class NewPaymentResponse extends CommonResponse {
   @JsonIgnore @NonNull private UUID paymentJourneyUuid;
   @JsonIgnore @NonNull private String nextUrl;

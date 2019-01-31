@@ -16,6 +16,9 @@ import uk.gov.dft.bluebadge.common.service.exception.ServiceException;
 @ControllerAdvice
 @Slf4j
 public class CommonResponseControllerAdvice extends CommonResponseEntityExceptionHandler {
+
+  private static final String PAYMENT_SERVICE_EXCEPTION = "Payment Service Exception. {}";
+
   @SuppressWarnings("unused")
   @ExceptionHandler({ServiceException.class})
   public ResponseEntity<CommonResponse> handleServiceException(ServiceException e) {
@@ -23,14 +26,14 @@ public class CommonResponseControllerAdvice extends CommonResponseEntityExceptio
     if (statusCode.is4xxClientError()) {
       log.error("Payment Service Client Exception. {}, {}", e.getMessage(), e.getResponse());
     } else {
-      log.error("Payment Service Exception. {}", e.getResponse(), e);
+      log.error(PAYMENT_SERVICE_EXCEPTION, e.getResponse(), e);
     }
     return e.getResponse();
   }
 
   @ExceptionHandler({Exception.class})
   public ResponseEntity<CommonResponse> handleException(Exception e) {
-    log.error("Payment Service Exception. {}", e.getMessage(), e);
+    log.error(PAYMENT_SERVICE_EXCEPTION, e.getMessage(), e);
     CommonResponse commonResponse = new CommonResponse();
     Error error = new Error();
     error.setMessage("Unexpected exception: " + e.toString());
@@ -42,7 +45,7 @@ public class CommonResponseControllerAdvice extends CommonResponseEntityExceptio
   @SuppressWarnings("unused")
   @ExceptionHandler({InvalidFormatException.class})
   public ResponseEntity<CommonResponse> handleInvalidFormatException(InvalidFormatException e) {
-    log.error("Payment Service Exception. {}", e.getMessage());
+    log.error(PAYMENT_SERVICE_EXCEPTION, e.getMessage());
     Error error = new Error();
 
     error.setReason(parseInvalidFormatReason(e.getMessage()));
