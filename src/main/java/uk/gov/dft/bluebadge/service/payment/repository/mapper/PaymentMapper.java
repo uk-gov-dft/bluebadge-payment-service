@@ -1,10 +1,12 @@
 package uk.gov.dft.bluebadge.service.payment.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import uk.gov.dft.bluebadge.service.payment.repository.domain.PaymentEntity;
 
 @Mapper
-@SuppressWarnings("unused")
 public interface PaymentMapper {
-  void createPayment(PaymentEntity messageEntity);
+  int createPayment(PaymentEntity messageEntity);
+
+  PaymentEntity selectPaymentByUuid(@Param("paymentJourneyUuid") String paymentJourneyUuid);
 }

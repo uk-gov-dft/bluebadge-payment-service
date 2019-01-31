@@ -3,20 +3,27 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="uk.gov.dft.bluebadge.service.payment.repository.mapper.PaymentMapper">
 
-    <!--<insert id="createMessage" parameterType="MessageEntity">-->
-        <!--INSERT INTO message-->
-        <!--(template, bbb_reference, notify_reference)-->
-        <!--VALUES (-->
-        <!--#{template},-->
-        <!--#{bbbReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler},-->
-        <!--#{notifyReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}-->
-        <!--)-->
-    <!--</insert>-->
+    <insert id="createPayment" parameterType="PaymentEntity">
+        INSERT INTO payment.payment
+        (payment_journey_uuid, payment_id, la_short_code, reference, cost)
+        VALUES (
+        #{paymentJourneyUuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.payment.repository.UuidTypeHandler},
+        #{paymentId}, #{laShortCode}, #{reference},#{cost}
+        )
+    </insert>
 
-    <!--<select id="selectMessageByUuid" resultType="MessageEntity" parameterType="java.util.UUID" >-->
-        <!--SELECT m.template, m.bbb_reference, m.notify_reference-->
-        <!--FROM message m-->
-        <!--WHERE m.bbb_reference = #{uuid,jdbcType=OTHER}-->
-    <!--</select>-->
+    <resultMap id="paymentEntityMap" type="PaymentEntity">
+        <result column="payment_journey_uuid" property="paymentJourneyUuid"
+                typeHandler="uk.gov.dft.bluebadge.common.repository.UuidTypeHandler"/>
+        <result column="payment_id" property="paymentId" />
+        <result column="la_short_code" property="laShortCode" />
+        <result column="reference" property="reference" />
+        <result column="cost" property="cost" />
+    </resultMap>
+    <select id="selectPaymentByUuid" resultType="PaymentEntity" resultMap="paymentEntityMap" parameterType="string" >
+        SELECT  payment_journey_uuid, payment_id, la_short_code, reference, cost
+        FROM payment.payment
+        WHERE payment_journey_uuid = #{paymentJourneyUuid}::UUID
+    </select>
 
 </mapper>

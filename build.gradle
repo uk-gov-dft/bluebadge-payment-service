@@ -74,7 +74,7 @@ sourceSets {
 }
 
 dependencies {
-    ext.commonVersion = '0.6.8-SNAPSHOT'
+    ext.commonVersion = '0.6.12-feature_BBB-1158-payment-service-api-SNAPSHOT'
 
     compile( group: 'uk.gov.dft.bluebadge', name: 'bluebadge-common', version: "${commonVersion}", changing: true ){
         exclude group: 'org.mybatis.spring.boot', module: 'mybatis-spring-boot-starter'
