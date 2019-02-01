@@ -1,5 +1,6 @@
 package uk.gov.dft.bluebadge.service.payment.service;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +80,8 @@ public class PaymentService {
     CreatePaymentResponse paymentResponse =
         govPayClient.createPayment(govPayProfile.getApiKey(), createPaymentReq);
 
-    UUID paymentUUID = persistPayment(laShortCode, createPaymentReq, paymentResponse);
+    UUID paymentUUID =
+        persistPayment(laShortCode, localAuthority.getBadgeCost(), reference, paymentResponse);
     return NewPaymentResponse.builder()
         .nextUrl(paymentResponse.getNextUrl())
         .paymentJourneyUuid(paymentUUID)
@@ -92,14 +94,15 @@ public class PaymentService {
 
   private UUID persistPayment(
       String laShortCode,
-      CreatePaymentRequest createPaymentReq,
+      BigDecimal badgeCost,
+      String reference,
       CreatePaymentResponse paymentResponse) {
     PaymentEntity paymentEntity =
         PaymentEntity.builder()
             .paymentJourneyUuid(UUID.randomUUID())
             .laShortCode(laShortCode)
-            .cost(createPaymentReq.getAmount())
-            .reference(createPaymentReq.getReference())
+            .cost(badgeCost)
+            .reference(reference)
             .paymentId(paymentResponse.getPaymentId())
             .build();
     paymentRepository.createPayment(paymentEntity);

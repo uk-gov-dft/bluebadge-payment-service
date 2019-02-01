@@ -40,6 +40,6 @@ public class PaymentRepositoryTest extends ApplicationContextTests {
     assertThat(persisted.getReference()).isEqualTo("ref repo test");
     assertThat(persisted.getPaymentId()).isEqualTo("pay id");
     assertThat(persisted.getLaShortCode()).isEqualTo("TEST");
-    assertThat(persisted.getCost()).isEqualTo(new BigDecimal(999));
+    assertThat(persisted.getCost()).isEqualTo(new BigDecimal("999.00"));
   }
 }

@@ -56,12 +56,12 @@ public class SecretsManager {
       log.error("The request was invalid due to: " + e.getMessage());
     } catch (InvalidParameterException e) {
       log.error("The request had invalid params: " + e.getMessage());
-    } catch(AWSSecretsManagerException e){
+    } catch (AWSSecretsManagerException e) {
       log.error("AWS request resulted in exception: {}", e.getMessage());
     }
 
     if (getSecretValueResult == null) {
-      log.debug("The requested secret {}, is null", secretName );
+      log.debug("The requested secret {}, is null", secretName);
       return null;
     }
 

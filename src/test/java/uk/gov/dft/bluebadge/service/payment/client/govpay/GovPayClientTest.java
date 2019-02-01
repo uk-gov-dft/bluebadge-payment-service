@@ -46,7 +46,7 @@ public class GovPayClientTest {
     mockServer
         .expect(once(), requestTo(TEST_URI + "/payments"))
         .andExpect(method(HttpMethod.POST))
-        .andExpect(jsonPath("amount", equalTo(150)))
+        .andExpect(jsonPath("amount", equalTo(15000)))
         .andExpect(jsonPath("reference", equalTo("TEST 123")))
         .andExpect(jsonPath("description", equalTo("Testing")))
         .andExpect(jsonPath("return_url", equalTo("http://return")))

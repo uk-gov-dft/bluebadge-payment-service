@@ -34,6 +34,7 @@ public class PaymentServiceTest {
   private static final String RETURN_URL = "http://test/return";
   private static final String GOV_PAY_API_KEY = "gov_pay_api_key";
   private static final BigDecimal BADGE_COST = new BigDecimal(435L);
+  private static final Integer BADGE_COST_IN_PENCE = 43500;
 
   private PaymentService paymentService;
   @Mock private SecretsManager mockSecretsManager;
@@ -91,7 +92,7 @@ public class PaymentServiceTest {
     CreatePaymentRequest paymentReq = govPayPayment.getValue();
     assertThat(paymentReq).isNotNull();
     assertThat(paymentReq.getReturnUrl()).isEqualTo(RETURN_URL);
-    assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST);
+    assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST_IN_PENCE);
     assertThat(paymentReq.getDescription()).isEqualTo("Test Blue badge payment");
     assertThat(paymentReq.getLanguage()).isEqualTo("en");
 
@@ -127,7 +128,7 @@ public class PaymentServiceTest {
     CreatePaymentRequest paymentReq = govPayPayment.getValue();
     assertThat(paymentReq).isNotNull();
     assertThat(paymentReq.getReturnUrl()).isEqualTo(RETURN_URL);
-    assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST);
+    assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST_IN_PENCE);
     assertThat(paymentReq.getDescription()).isEqualTo("Test Blue badge payment");
     assertThat(paymentReq.getLanguage()).isEqualTo("cy");
 
