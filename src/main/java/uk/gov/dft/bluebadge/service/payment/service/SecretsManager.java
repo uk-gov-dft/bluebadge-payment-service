@@ -1,10 +1,7 @@
 package uk.gov.dft.bluebadge.service.payment.service;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.amazonaws.services.secretsmanager.model.AWSSecretsManagerException;
-import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
-import com.amazonaws.services.secretsmanager.model.CreateSecretResult;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.amazonaws.services.secretsmanager.model.InvalidParameterException;
