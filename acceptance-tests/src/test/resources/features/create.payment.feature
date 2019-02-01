@@ -1,5 +1,5 @@
 @payments
-Feature: Verify creating payments
+Feature: Verify creating payments failures
 
   Background:
     * url baseUrl
@@ -9,14 +9,6 @@ Feature: Verify creating payments
     * def DbUtils = Java.type('uk.gov.service.bluebadge.test.utils.DbUtils')
     * def db = new DbUtils(dbConfig)
     * def setup = db.runScript('acceptance-test-data.sql')
-
-  Scenario: Payment creation
-    Given path 'payments'
-    And request {laShortCode:"BIRM", returnUrl:"http://test/return", paymentMessage:"Blue badge test"}
-    When method POST
-    And print response
-    Then status 200
-    And match $.data contains {paymentJourneyUuid:"#notnull", nextUrl:"#notnull"}
 
   Scenario: Payment creation - LA does not have payments enabled. Results in common response error.
     Given path 'payments'

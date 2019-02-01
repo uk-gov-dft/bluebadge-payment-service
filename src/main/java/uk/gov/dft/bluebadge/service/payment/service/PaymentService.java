@@ -13,9 +13,11 @@ import uk.gov.dft.bluebadge.common.service.exception.ServiceUnavailableException
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentRequest;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.GovPayClient;
+import uk.gov.dft.bluebadge.service.payment.client.govpay.PaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model.LocalAuthorityRefData;
 import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentDetails;
 import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentResponse;
+import uk.gov.dft.bluebadge.service.payment.controller.PaymentStatusResponse;
 import uk.gov.dft.bluebadge.service.payment.repository.PaymentRepository;
 import uk.gov.dft.bluebadge.service.payment.repository.domain.PaymentEntity;
 import uk.gov.dft.bluebadge.service.payment.service.referencedata.ReferenceDataService;
@@ -107,5 +109,25 @@ public class PaymentService {
             .build();
     paymentRepository.createPayment(paymentEntity);
     return paymentEntity.getPaymentJourneyUuid();
+  }
+
+  public PaymentStatusResponse retrievePaymentStatus(UUID paymentJourneyUuid) {
+    PaymentEntity paymentEntity =
+        paymentRepository.selectPaymentByUuid(paymentJourneyUuid.toString());
+
+    GovPayProfile govPayProfile =
+        secretsManager.retrieveLAGovPayProfile(paymentEntity.getLaShortCode());
+    if (null == govPayProfile) {
+      throw new ServiceUnavailableException(
+          "No GOV Pay profile found for LA: " + paymentEntity.getLaShortCode());
+    }
+
+    PaymentResponse paymentResponse =
+        govPayClient.retrievePayment(govPayProfile.getApiKey(), paymentEntity.getPaymentId());
+    return PaymentStatusResponse.builder()
+        .paymentJourneyUuid(paymentJourneyUuid)
+        .reference(paymentEntity.getReference())
+        .status(paymentResponse.getStatus())
+        .build();
   }
 }

@@ -28,6 +28,7 @@ public class GovPayClientTest {
   GovPayClient govPayClient;
   MockRestServiceServer mockServer;
   private ClassPathResource createJsonResponse;
+  private ClassPathResource retrieveJsonResponse;
 
   @Before
   public void setup() {
@@ -38,6 +39,7 @@ public class GovPayClientTest {
     govPayClient = new GovPayClient(restTemplate);
 
     createJsonResponse = new ClassPathResource("testdata/govpay/createResponse.json");
+    retrieveJsonResponse = new ClassPathResource("testdata/govpay/retrieveResponse_created.json");
   }
 
   @Test
@@ -71,5 +73,22 @@ public class GovPayClientTest {
     assertThat(paymentResponse.getNextUrl())
         .isEqualTo(
             "https://www.payments.service.gov.uk/secure/3d77de51-c137-4c01-b0dc-5f012cb1ec8d");
+  }
+
+  @Test
+  public void retrievePayment() {
+    mockServer
+        .expect(once(), requestTo(TEST_URI + "/payments/test_payment_id"))
+        .andExpect(method(HttpMethod.GET))
+        .andExpect(header(HttpHeaders.AUTHORIZATION, equalTo("Bearer " + TEST_API_KEY)))
+        .andRespond(withSuccess(retrieveJsonResponse, MediaType.APPLICATION_JSON));
+
+    String paymentId = "test_payment_id";
+    PaymentResponse paymentResponse = govPayClient.retrievePayment(TEST_API_KEY, paymentId);
+
+    assertThat(paymentResponse).isNotNull();
+    assertThat(paymentResponse.getPaymentId()).isEqualTo("8e5n9ln5j4la9nb6lusu5p2mj4");
+    assertThat(paymentResponse.getStatus()).isEqualTo("created");
+    assertThat(paymentResponse.getFinished()).isFalse();
   }
 }
