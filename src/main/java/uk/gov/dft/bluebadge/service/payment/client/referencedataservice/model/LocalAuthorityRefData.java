@@ -3,6 +3,7 @@ package uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,10 +18,10 @@ public class LocalAuthorityRefData extends ReferenceData {
   private LocalAuthorityMetaData localAuthorityMetaData = null;
 
   @JsonIgnore
-  public Long getBadgeCost() {
+  public BigDecimal getBadgeCost() {
     return getLocalAuthorityMetaData()
         .map(LocalAuthorityMetaData::getBadgeCost)
-        .orElse(888L); //TODO null);
+        .orElse(BigDecimal.valueOf(888L)); //TODO null);
   }
 
   public Optional<LocalAuthorityMetaData> getLocalAuthorityMetaData() {
@@ -39,7 +40,7 @@ public class LocalAuthorityRefData extends ReferenceData {
     private String issuingAuthorityName;
     private String contactUrl;
     private String differentServiceSignpostUrl;
-    private Long badgeCost;
+    private BigDecimal badgeCost;
     private Boolean paymentsEnabled;
   }
 }

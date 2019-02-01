@@ -54,7 +54,7 @@ public class PaymentService {
     if (!localAuthority.getPaymentsEnabled()) {
       throw new ServiceUnavailableException("Local authority does not have payments enabled.");
     }
-    if (null == localAuthority.getBadgeCost() || localAuthority.getBadgeCost() <= 0) {
+    if (null == localAuthority.getBadgeCost() || localAuthority.getBadgeCost().longValue() <= 0) {
       throw new ServiceUnavailableException(
           "Local authority has an invalid badge cost. Cost: " + localAuthority.getBadgeCost());
     }
@@ -70,7 +70,7 @@ public class PaymentService {
 
     CreatePaymentRequest createPaymentReq =
         CreatePaymentRequest.builder()
-            .amount(localAuthority.getBadgeCost())
+            .amount(localAuthority.getBadgeCost().longValue())
             .description(newPaymentDetails.getPaymentMessage())
             .reference(reference)
             .returnUrl(newPaymentDetails.getReturnUrl())
