@@ -1,5 +1,6 @@
 package uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model;
 
+import java.math.BigDecimal;
 import uk.gov.dft.bluebadge.service.payment.service.referencedata.RefDataGroupEnum;
 
 public class TestLocalAuthorityRefData {
@@ -11,7 +12,7 @@ public class TestLocalAuthorityRefData {
 
     LocalAuthorityRefData.LocalAuthorityMetaData metaData =
         new LocalAuthorityRefData.LocalAuthorityMetaData();
-    metaData.setBadgeCost(123L);
+    metaData.setBadgeCost(new BigDecimal(123L));
 
     result.setLocalAuthorityMetaData(metaData);
     return result;

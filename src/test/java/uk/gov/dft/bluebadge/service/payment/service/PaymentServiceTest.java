@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model.TestLocalAuthorityRefData.localAuthorityRefData;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +29,12 @@ import uk.gov.dft.bluebadge.service.payment.service.referencedata.ReferenceDataS
 
 public class PaymentServiceTest {
 
-  public static final String TEST_LA = "TEST_LA";
-  public static final String RETURN_URL = "http://test/return";
-  public static final String GOV_PAY_API_KEY = "gov_pay_api_key";
-  public static final long BADGE_COST = 435L;
+  private static final String TEST_LA = "TEST_LA";
+  private static final String RETURN_URL = "http://test/return";
+  private static final String GOV_PAY_API_KEY = "gov_pay_api_key";
+  private static final BigDecimal BADGE_COST = new BigDecimal(435L);
 
-  PaymentService paymentService;
+  private PaymentService paymentService;
   @Mock private SecretsManager mockSecretsManager;
   @Mock private GovPayClient mockGovPayClient;
   @Mock private PaymentRepository mockPaymentRepo;
@@ -119,7 +120,7 @@ public class PaymentServiceTest {
 
   @Test
   public void createPayment_whenLAHasInvalidBadgeCost_thenException() {
-    testLa.getLocalAuthorityMetaData().get().setBadgeCost(0l);
+    testLa.getLocalAuthorityMetaData().get().setBadgeCost(new BigDecimal(0));
     when(mockDataRefService.getLocalAuthority(TEST_LA)).thenReturn(testLa);
 
     try {

@@ -2,6 +2,7 @@ package uk.gov.dft.bluebadge.service.payment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,7 @@ public class PaymentRepositoryTest extends ApplicationContextTests {
             .paymentId("pay id")
             .laShortCode("TEST")
             .paymentJourneyUuid(paymentJourneyUuid)
-            .cost(999L)
+            .cost(new BigDecimal(999))
             .build();
 
     int insertCount = paymentRepository.createPayment(paymentEntity);
@@ -39,6 +40,6 @@ public class PaymentRepositoryTest extends ApplicationContextTests {
     assertThat(persisted.getReference()).isEqualTo("ref repo test");
     assertThat(persisted.getPaymentId()).isEqualTo("pay id");
     assertThat(persisted.getLaShortCode()).isEqualTo("TEST");
-    assertThat(persisted.getCost()).isEqualTo(999L);
+    assertThat(persisted.getCost()).isEqualTo(new BigDecimal(999));
   }
 }

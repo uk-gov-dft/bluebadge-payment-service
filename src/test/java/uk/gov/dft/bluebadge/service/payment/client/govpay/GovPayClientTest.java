@@ -9,6 +9,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import java.math.BigDecimal;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class GovPayClientTest {
 
     CreatePaymentRequest paymentRequest =
         CreatePaymentRequest.builder()
-            .amount(150L)
+            .amount(new BigDecimal(150L))
             .description("Testing")
             .reference("TEST 123")
             .returnUrl("http://return")

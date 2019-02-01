@@ -70,7 +70,7 @@ public class PaymentService {
 
     CreatePaymentRequest createPaymentReq =
         CreatePaymentRequest.builder()
-            .amount(localAuthority.getBadgeCost().longValue())
+            .amount(localAuthority.getBadgeCost())
             .description(newPaymentDetails.getPaymentMessage())
             .reference(reference)
             .returnUrl(newPaymentDetails.getReturnUrl())
