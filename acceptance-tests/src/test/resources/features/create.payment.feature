@@ -3,7 +3,7 @@ Feature: Verify creating payments
 
   Background:
     * url baseUrl
-    * def result = callonce read('./oauth2.feature')
+    * def result = callonce read('./oauth2-citizen-app.feature')
     * header Authorization = 'Bearer ' + result.accessToken
 
   Scenario: Payment creation
