@@ -1,7 +1,6 @@
 package uk.gov.dft.bluebadge.service.payment.repository;
 
 import lombok.Getter;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 import uk.gov.dft.bluebadge.service.payment.repository.domain.PaymentEntity;

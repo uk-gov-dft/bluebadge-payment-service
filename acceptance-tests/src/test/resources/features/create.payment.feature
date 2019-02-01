@@ -5,6 +5,10 @@ Feature: Verify creating payments
     * url baseUrl
     * def result = callonce read('./oauth2-citizen-app.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * def dbConfig = { username: 'developer',  ***REMOVED*** }
+    * def DbUtils = Java.type('uk.gov.service.bluebadge.test.utils.DbUtils')
+    * def db = new DbUtils(dbConfig)
+    * def setup = db.runScript('acceptance-test-data.sql')
 
   Scenario: Payment creation
     Given path 'payments'
