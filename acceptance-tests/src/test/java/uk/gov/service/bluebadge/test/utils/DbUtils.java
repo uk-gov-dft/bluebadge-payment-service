@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
-
 public class DbUtils {
 
   private static final Logger log = LoggerFactory.getLogger(DbUtils.class);
