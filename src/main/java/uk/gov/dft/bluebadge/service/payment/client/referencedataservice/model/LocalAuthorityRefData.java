@@ -21,7 +21,7 @@ public class LocalAuthorityRefData extends ReferenceData {
   public BigDecimal getBadgeCost() {
     return getLocalAuthorityMetaData()
         .map(LocalAuthorityMetaData::getBadgeCost)
-        .orElse(BigDecimal.valueOf(888L)); //TODO null);
+        .orElse(null);
   }
 
   public Optional<LocalAuthorityMetaData> getLocalAuthorityMetaData() {
@@ -31,7 +31,7 @@ public class LocalAuthorityRefData extends ReferenceData {
   public boolean getPaymentsEnabled() {
     return getLocalAuthorityMetaData()
         .map(LocalAuthorityMetaData::getPaymentsEnabled)
-        .orElse(true); // TODO false);
+        .orElse(false);
   }
 
   @Data
