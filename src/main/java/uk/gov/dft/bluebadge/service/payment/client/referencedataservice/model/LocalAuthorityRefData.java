@@ -19,9 +19,7 @@ public class LocalAuthorityRefData extends ReferenceData {
 
   @JsonIgnore
   public BigDecimal getBadgeCost() {
-    return getLocalAuthorityMetaData()
-        .map(LocalAuthorityMetaData::getBadgeCost)
-        .orElse(null);
+    return getLocalAuthorityMetaData().map(LocalAuthorityMetaData::getBadgeCost).orElse(null);
   }
 
   public Optional<LocalAuthorityMetaData> getLocalAuthorityMetaData() {

@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.common.service.exception.ServiceUnavailableException;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentRequest;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentResponse;
@@ -92,6 +93,7 @@ public class PaymentServiceTest {
     assertThat(paymentReq.getReturnUrl()).isEqualTo(RETURN_URL);
     assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST);
     assertThat(paymentReq.getDescription()).isEqualTo("Test Blue badge payment");
+    assertThat(paymentReq.getLanguage()).isEqualTo("en");
 
     ArgumentCaptor<PaymentEntity> paymentEntityCapture =
         ArgumentCaptor.forClass(PaymentEntity.class);
@@ -99,6 +101,57 @@ public class PaymentServiceTest {
     PaymentEntity paymentEntity = paymentEntityCapture.getValue();
     assertThat(paymentEntity).isNotNull();
     assertThat(paymentEntity.getCost()).isEqualTo(BADGE_COST);
+  }
+
+  @Test
+  public void createPayment_welsh() {
+
+    when(mockDataRefService.getLocalAuthority(TEST_LA)).thenReturn(testLa);
+    when(mockSecretsManager.retrieveLAGovPayProfile(TEST_LA)).thenReturn(govPayProfile);
+    when(mockGovPayClient.createPayment(any(), any())).thenReturn(govPayResponse);
+
+    testPaymentDetails.setLanguage("cy");
+
+    NewPaymentResponse result = paymentService.createPayment(testPaymentDetails);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getPaymentJourneyUuid()).isNotNull();
+    assertThat(result.getNextUrl()).isEqualTo("http://govpaynext");
+
+    verify(mockSecretsManager).retrieveLAGovPayProfile(TEST_LA);
+    verify(mockDataRefService).getLocalAuthority(TEST_LA);
+
+    ArgumentCaptor<CreatePaymentRequest> govPayPayment =
+        ArgumentCaptor.forClass(CreatePaymentRequest.class);
+    verify(mockGovPayClient).createPayment(eq(GOV_PAY_API_KEY), govPayPayment.capture());
+    CreatePaymentRequest paymentReq = govPayPayment.getValue();
+    assertThat(paymentReq).isNotNull();
+    assertThat(paymentReq.getReturnUrl()).isEqualTo(RETURN_URL);
+    assertThat(paymentReq.getAmount()).isEqualTo(BADGE_COST);
+    assertThat(paymentReq.getDescription()).isEqualTo("Test Blue badge payment");
+    assertThat(paymentReq.getLanguage()).isEqualTo("cy");
+
+    ArgumentCaptor<PaymentEntity> paymentEntityCapture =
+        ArgumentCaptor.forClass(PaymentEntity.class);
+    verify(mockPaymentRepo).createPayment(paymentEntityCapture.capture());
+    PaymentEntity paymentEntity = paymentEntityCapture.getValue();
+    assertThat(paymentEntity).isNotNull();
+    assertThat(paymentEntity.getCost()).isEqualTo(BADGE_COST);
+  }
+
+  @Test
+  public void createPayment_whenInvalidLA_thenException() {
+    when(mockDataRefService.getLocalAuthority(TEST_LA)).thenReturn(null);
+
+    try {
+      paymentService.createPayment(testPaymentDetails);
+      fail("No exception thrown");
+    } catch (BadRequestException e) {
+    }
+
+    verifyZeroInteractions(mockSecretsManager);
+    verifyZeroInteractions(mockGovPayClient);
+    verifyZeroInteractions(mockPaymentRepo);
   }
 
   @Test
@@ -111,6 +164,22 @@ public class PaymentServiceTest {
       fail("No exception thrown");
     } catch (ServiceUnavailableException e) {
 
+    }
+
+    verifyZeroInteractions(mockSecretsManager);
+    verifyZeroInteractions(mockGovPayClient);
+    verifyZeroInteractions(mockPaymentRepo);
+  }
+
+  @Test
+  public void createPayment_whenLAHasNoBadgeCost_thenException() {
+    testLa.getLocalAuthorityMetaData().get().setBadgeCost(null);
+    when(mockDataRefService.getLocalAuthority(TEST_LA)).thenReturn(testLa);
+
+    try {
+      paymentService.createPayment(testPaymentDetails);
+      fail("No exception thrown");
+    } catch (ServiceUnavailableException e) {
     }
 
     verifyZeroInteractions(mockSecretsManager);

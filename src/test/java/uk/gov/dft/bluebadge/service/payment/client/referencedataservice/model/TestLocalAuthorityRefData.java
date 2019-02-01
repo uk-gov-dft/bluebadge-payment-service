@@ -13,6 +13,7 @@ public class TestLocalAuthorityRefData {
     LocalAuthorityRefData.LocalAuthorityMetaData metaData =
         new LocalAuthorityRefData.LocalAuthorityMetaData();
     metaData.setBadgeCost(new BigDecimal(123L));
+    metaData.setPaymentsEnabled(Boolean.TRUE);
 
     result.setLocalAuthorityMetaData(metaData);
     return result;
