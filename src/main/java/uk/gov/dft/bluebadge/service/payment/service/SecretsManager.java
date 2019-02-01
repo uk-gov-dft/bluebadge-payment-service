@@ -1,6 +1,10 @@
 package uk.gov.dft.bluebadge.service.payment.service;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.services.secretsmanager.model.AWSSecretsManagerException;
+import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
+import com.amazonaws.services.secretsmanager.model.CreateSecretResult;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.amazonaws.services.secretsmanager.model.InvalidParameterException;
@@ -42,6 +46,7 @@ public class SecretsManager {
 
   @SneakyThrows
   private GovPayProfile getSecret(String secretName) {
+    log.debug("Retrieving secret {}, from aws", secretName);
     String secret;
     GetSecretValueRequest getSecretValueRequest =
         new GetSecretValueRequest().withSecretId(secretName);
@@ -54,9 +59,12 @@ public class SecretsManager {
       log.error("The request was invalid due to: " + e.getMessage());
     } catch (InvalidParameterException e) {
       log.error("The request had invalid params: " + e.getMessage());
+    } catch(AWSSecretsManagerException e){
+      log.error("AWS request resulted in exception: {}", e.getMessage());
     }
 
     if (getSecretValueResult == null) {
+      log.debug("The requested secret {}, is null", secretName );
       return null;
     }
 
