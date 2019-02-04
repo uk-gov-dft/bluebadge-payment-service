@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.service.payment.service.PaymentService;
 
 @RestController
@@ -27,7 +28,13 @@ public class PaymentApiController {
   }
 
   @GetMapping("/{paymentJourneyUuid}")
-  public PaymentStatusResponse retrievePaymentStatus(@PathVariable UUID paymentJourneyUuid) {
-    return paymentService.retrievePaymentStatus(paymentJourneyUuid);
+  public PaymentStatusResponse retrievePaymentStatus(@PathVariable String paymentJourneyUuid) {
+    UUID uuid;
+    try {
+      uuid = UUID.fromString(paymentJourneyUuid);
+    } catch (IllegalArgumentException e) {
+      throw new BadRequestException(null, "Invalid payment journey UUID", e.getMessage());
+    }
+    return paymentService.retrievePaymentStatus(uuid);
   }
 }

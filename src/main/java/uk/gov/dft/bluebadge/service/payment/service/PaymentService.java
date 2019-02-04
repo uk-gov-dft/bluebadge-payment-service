@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
+import uk.gov.dft.bluebadge.common.service.exception.NotFoundException;
 import uk.gov.dft.bluebadge.common.service.exception.ServiceUnavailableException;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentRequest;
-import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.GovPayClient;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.PaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model.LocalAuthorityRefData;
@@ -79,7 +79,7 @@ public class PaymentService {
             .returnUrl(newPaymentDetails.getReturnUrl())
             .language(language)
             .build();
-    CreatePaymentResponse paymentResponse =
+    PaymentResponse paymentResponse =
         govPayClient.createPayment(govPayProfile.getApiKey(), createPaymentReq);
 
     UUID paymentUUID =
@@ -95,10 +95,7 @@ public class PaymentService {
   }
 
   private UUID persistPayment(
-      String laShortCode,
-      BigDecimal badgeCost,
-      String reference,
-      CreatePaymentResponse paymentResponse) {
+      String laShortCode, BigDecimal badgeCost, String reference, PaymentResponse paymentResponse) {
     PaymentEntity paymentEntity =
         PaymentEntity.builder()
             .paymentJourneyUuid(UUID.randomUUID())
@@ -106,6 +103,7 @@ public class PaymentService {
             .cost(badgeCost)
             .reference(reference)
             .paymentId(paymentResponse.getPaymentId())
+            .status(paymentResponse.getStatus())
             .build();
     paymentRepository.createPayment(paymentEntity);
     return paymentEntity.getPaymentJourneyUuid();
@@ -114,6 +112,10 @@ public class PaymentService {
   public PaymentStatusResponse retrievePaymentStatus(UUID paymentJourneyUuid) {
     PaymentEntity paymentEntity =
         paymentRepository.selectPaymentByUuid(paymentJourneyUuid.toString());
+
+    if (null == paymentEntity) {
+      throw new NotFoundException("Payment", NotFoundException.Operation.RETRIEVE);
+    }
 
     GovPayProfile govPayProfile =
         secretsManager.retrieveLAGovPayProfile(paymentEntity.getLaShortCode());
@@ -124,6 +126,10 @@ public class PaymentService {
 
     PaymentResponse paymentResponse =
         govPayClient.retrievePayment(govPayProfile.getApiKey(), paymentEntity.getPaymentId());
+
+    paymentEntity.setStatus(paymentResponse.getStatus());
+    paymentRepository.updatePayment(paymentEntity);
+
     return PaymentStatusResponse.builder()
         .paymentJourneyUuid(paymentJourneyUuid)
         .reference(paymentEntity.getReference())

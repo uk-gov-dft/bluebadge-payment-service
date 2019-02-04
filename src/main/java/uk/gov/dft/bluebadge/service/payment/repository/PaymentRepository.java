@@ -20,4 +20,8 @@ public class PaymentRepository {
   public PaymentEntity selectPaymentByUuid(String paymentJourneyUuid) {
     return session.selectOne("selectPaymentByUuid", paymentJourneyUuid);
   }
+
+  public int updatePayment(PaymentEntity paymentEntity) {
+    return session.update("updatePayment", paymentEntity);
+  }
 }

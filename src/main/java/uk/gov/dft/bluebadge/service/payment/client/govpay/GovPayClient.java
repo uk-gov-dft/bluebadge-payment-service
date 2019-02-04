@@ -22,13 +22,12 @@ public class GovPayClient {
     this.restTemplate = restTemplate;
   }
 
-  public CreatePaymentResponse createPayment(
-      String apiKey, CreatePaymentRequest createPaymentRequest) {
+  public PaymentResponse createPayment(String apiKey, CreatePaymentRequest createPaymentRequest) {
     HttpHeaders headers = getHttpHeaders(apiKey);
     headers.setContentType(MediaType.APPLICATION_JSON);
     HttpEntity<CreatePaymentRequest> request = new HttpEntity<>(createPaymentRequest, headers);
 
-    return restTemplate.postForObject(PAYMENTS_ENDPOINT, request, CreatePaymentResponse.class);
+    return restTemplate.postForObject(PAYMENTS_ENDPOINT, request, PaymentResponse.class);
   }
 
   private HttpHeaders getHttpHeaders(String apiKey) {

@@ -8,5 +8,7 @@ import uk.gov.dft.bluebadge.service.payment.repository.domain.PaymentEntity;
 public interface PaymentMapper {
   int createPayment(PaymentEntity messageEntity);
 
+  int updatePayment(PaymentEntity messageEntity);
+
   PaymentEntity selectPaymentByUuid(@Param("paymentJourneyUuid") String paymentJourneyUuid);
 }
