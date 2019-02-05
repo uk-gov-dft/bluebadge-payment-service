@@ -3,6 +3,9 @@ blue-badge:
     url: http://authorisation-service:8380/bb_auth
   payment:
     secretEnv: ${bb_env}
+  referencedataservice:
+    servicehost:
+      host: referencedata-service
 
 spring:
   main:

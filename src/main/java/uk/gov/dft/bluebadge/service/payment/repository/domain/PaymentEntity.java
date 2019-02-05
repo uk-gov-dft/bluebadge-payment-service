@@ -1,12 +1,17 @@
 package uk.gov.dft.bluebadge.service.payment.repository.domain;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
 
 @Builder
-@Getter
+@Data
 public class PaymentEntity {
-  @NonNull private UUID govPayReference;
+  @NonNull private UUID paymentJourneyUuid;
+  @NonNull private String paymentId;
+  @NonNull private String laShortCode;
+  @NonNull private String reference;
+  @NonNull private BigDecimal cost;
 }
