@@ -1,10 +1,10 @@
-package uk.gov.dft.bluebadge.service.payment.controller;
+package uk.gov.dft.bluebadge.service.payment.controller.model;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class NewPaymentDetails {
+public class NewPaymentRequest {
   @NotBlank private String laShortCode;
   @NotBlank private String returnUrl;
   @NotBlank private String paymentMessage;

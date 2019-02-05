@@ -22,8 +22,8 @@ import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentRequest;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.GovPayClient;
 import uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model.LocalAuthorityRefData;
-import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentDetails;
-import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentResponse;
+import uk.gov.dft.bluebadge.service.payment.controller.model.NewPaymentRequest;
+import uk.gov.dft.bluebadge.service.payment.controller.model.NewPaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.repository.PaymentRepository;
 import uk.gov.dft.bluebadge.service.payment.repository.domain.PaymentEntity;
 import uk.gov.dft.bluebadge.service.payment.service.referencedata.ReferenceDataService;
@@ -42,7 +42,7 @@ public class PaymentServiceTest {
   @Mock private PaymentRepository mockPaymentRepo;
   @Mock private ReferenceDataService mockDataRefService;
 
-  private NewPaymentDetails testPaymentDetails;
+  private NewPaymentRequest testPaymentDetails;
   private LocalAuthorityRefData testLa;
   private CreatePaymentResponse govPayResponse;
   private GovPayProfile govPayProfile;
@@ -54,7 +54,7 @@ public class PaymentServiceTest {
         new PaymentService(
             mockSecretsManager, mockGovPayClient, mockPaymentRepo, mockDataRefService);
 
-    testPaymentDetails = new NewPaymentDetails();
+    testPaymentDetails = new NewPaymentRequest();
     testPaymentDetails.setLaShortCode(TEST_LA);
     testPaymentDetails.setReturnUrl(RETURN_URL);
     testPaymentDetails.setPaymentMessage("Test Blue badge payment");
