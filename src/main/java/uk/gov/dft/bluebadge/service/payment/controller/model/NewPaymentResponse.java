@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.payment.controller;
+package uk.gov.dft.bluebadge.service.payment.controller.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

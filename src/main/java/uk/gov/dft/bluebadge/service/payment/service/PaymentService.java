@@ -15,6 +15,8 @@ import uk.gov.dft.bluebadge.service.payment.client.govpay.CreatePaymentRequest;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.GovPayClient;
 import uk.gov.dft.bluebadge.service.payment.client.govpay.PaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.client.referencedataservice.model.LocalAuthorityRefData;
+import uk.gov.dft.bluebadge.service.payment.controller.model.NewPaymentRequest;
+import uk.gov.dft.bluebadge.service.payment.controller.model.NewPaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentDetails;
 import uk.gov.dft.bluebadge.service.payment.controller.NewPaymentResponse;
 import uk.gov.dft.bluebadge.service.payment.controller.PaymentStatusResponse;
@@ -47,7 +49,7 @@ public class PaymentService {
     this.referenceDataService = referenceDataService;
   }
 
-  public NewPaymentResponse createPayment(NewPaymentDetails newPaymentDetails) {
+  public NewPaymentResponse createPayment(NewPaymentRequest newPaymentDetails) {
     String laShortCode = newPaymentDetails.getLaShortCode();
     LocalAuthorityRefData localAuthority = referenceDataService.getLocalAuthority(laShortCode);
     if (null == localAuthority) {
