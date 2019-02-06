@@ -1,0 +1,52 @@
+{
+  "amount": 45,
+  "state": {
+    "status": "created",
+    "finished": false
+  },
+  "description": "New blue badge application",
+  "reference": "SJE_1234",
+  "language": "cy",
+  "payment_id": "8e5n9ln5j4la9nb6lusu5p2mj4",
+  "payment_provider": "sandbox",
+  "return_url": "http://bb/payment/ref",
+  "created_date": "2019-02-01T11:08:54.867Z",
+  "refund_summary": {
+    "status": "pending",
+    "amount_available": 45,
+    "amount_submitted": 0
+  },
+  "settlement_summary": {},
+  "delayed_capture": false,
+  "_links": {
+    "self": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/8e5n9ln5j4la9nb6lusu5p2mj4",
+      "method": "GET"
+    },
+    "next_url": {
+      "href": "https://www.payments.service.gov.uk/secure/7fa29192-171c-49ba-ac12-06f74eea966b",
+      "method": "GET"
+    },
+    "next_url_post": {
+      "type": "application/x-www-form-urlencoded",
+      "params": {
+        "chargeTokenId": "7fa29192-171c-49ba-ac12-06f74eea966b"
+      },
+      "href": "https://www.payments.service.gov.uk/secure",
+      "method": "POST"
+    },
+    "events": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/8e5n9ln5j4la9nb6lusu5p2mj4/events",
+      "method": "GET"
+    },
+    "refunds": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/8e5n9ln5j4la9nb6lusu5p2mj4/refunds",
+      "method": "GET"
+    },
+    "cancel": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/8e5n9ln5j4la9nb6lusu5p2mj4/cancel",
+      "method": "POST"
+    },
+    "capture": null
+  }
+}

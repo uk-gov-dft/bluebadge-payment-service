@@ -1,0 +1,41 @@
+{
+  "amount": 1200,
+  "state": {
+    "status": "failed",
+    "finished": true,
+    "message": "Payment expired",
+    "code": "P0020"
+  },
+  "description": "postman payment e",
+  "reference": "P6BA38PUAGA4",
+  "language": "en",
+  "payment_id": "r08iu2jtm6ds9vo6jv6i62pd1p",
+  "payment_provider": "sandbox",
+  "return_url": "https://somewhere/in/the/citizenApp",
+  "created_date": "2019-02-01T15:12:27.924Z",
+  "refund_summary": {
+    "status": "unavailable",
+    "amount_available": 1200,
+    "amount_submitted": 0
+  },
+  "settlement_summary": {},
+  "delayed_capture": false,
+  "_links": {
+    "self": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/r08iu2jtm6ds9vo6jv6i62pd1p",
+      "method": "GET"
+    },
+    "next_url": null,
+    "next_url_post": null,
+    "events": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/r08iu2jtm6ds9vo6jv6i62pd1p/events",
+      "method": "GET"
+    },
+    "refunds": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/r08iu2jtm6ds9vo6jv6i62pd1p/refunds",
+      "method": "GET"
+    },
+    "cancel": null,
+    "capture": null
+  }
+}

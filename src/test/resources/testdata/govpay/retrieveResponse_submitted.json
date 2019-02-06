@@ -1,0 +1,68 @@
+{
+  "amount": 1000,
+  "state": {
+    "status": "submitted",
+    "finished": false
+  },
+  "description": "Blue badge application fee",
+  "reference": "NF4ZJB7KTA",
+  "email": "davebaines1@googlemail.com",
+  "language": "en",
+  "payment_id": "ndcjttgkqphnlrbrmp26dibi2f",
+  "payment_provider": "sandbox",
+  "return_url": "https://products.payments.service.gov.uk/payment-complete/2eb056f764be4992b2908982168badb8",
+  "created_date": "2019-02-04T10:47:42.587Z",
+  "refund_summary": {
+    "status": "pending",
+    "amount_available": 1000,
+    "amount_submitted": 0
+  },
+  "settlement_summary": {},
+  "card_details": {
+    "last_digits_card_number": "1111",
+    "first_digits_card_number": "444433",
+    "cardholder_name": "asdfasdf",
+    "expiry_date": "09/20",
+    "billing_address": {
+      "line1": "2 Brown Lane",
+      "line2": "Marple",
+      "postcode": "SK6 7FX",
+      "city": "STOCKPORT",
+      "country": "GB"
+    },
+    "card_brand": "Visa"
+  },
+  "delayed_capture": false,
+  "card_brand": "Visa",
+  "_links": {
+    "self": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/ndcjttgkqphnlrbrmp26dibi2f",
+      "method": "GET"
+    },
+    "next_url": {
+      "href": "https://www.payments.service.gov.uk/secure/33bc0449-d924-44c3-b4b8-be777bcefeea",
+      "method": "GET"
+    },
+    "next_url_post": {
+      "type": "application/x-www-form-urlencoded",
+      "params": {
+        "chargeTokenId": "33bc0449-d924-44c3-b4b8-be777bcefeea"
+      },
+      "href": "https://www.payments.service.gov.uk/secure",
+      "method": "POST"
+    },
+    "events": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/ndcjttgkqphnlrbrmp26dibi2f/events",
+      "method": "GET"
+    },
+    "refunds": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/ndcjttgkqphnlrbrmp26dibi2f/refunds",
+      "method": "GET"
+    },
+    "cancel": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/ndcjttgkqphnlrbrmp26dibi2f/cancel",
+      "method": "POST"
+    },
+    "capture": null
+  }
+}
