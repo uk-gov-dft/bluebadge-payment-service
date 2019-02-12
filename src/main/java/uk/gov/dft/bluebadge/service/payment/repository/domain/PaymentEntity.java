@@ -14,4 +14,5 @@ public class PaymentEntity {
   @NonNull private String laShortCode;
   @NonNull private String reference;
   @NonNull private BigDecimal cost;
+  @NonNull private String status;
 }

@@ -1,0 +1,57 @@
+{
+  "amount": 45,
+  "state": {
+    "status": "failed",
+    "finished": true,
+    "message": "Payment method rejected",
+    "code": "P0010"
+  },
+  "description": "New blue badge application",
+  "reference": "SJE_1234",
+  "email": "bob@jones.com",
+  "language": "en",
+  "payment_id": "96pha5fplvqs4k1bc1l64ib26u",
+  "payment_provider": "sandbox",
+  "return_url": "http://bb/payment/ref",
+  "created_date": "2019-02-01T11:27:21.005Z",
+  "refund_summary": {
+    "status": "unavailable",
+    "amount_available": 45,
+    "amount_submitted": 0
+  },
+  "settlement_summary": {},
+  "card_details": {
+    "last_digits_card_number": "0002",
+    "first_digits_card_number": "400000",
+    "cardholder_name": "Bob",
+    "expiry_date": "11/21",
+    "billing_address": {
+      "line1": "32",
+      "line2": "",
+      "postcode": "M21 9LT",
+      "city": "Manchester",
+      "country": "GB"
+    },
+    "card_brand": "Visa"
+  },
+  "delayed_capture": false,
+  "card_brand": "Visa",
+  "_links": {
+    "self": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/96pha5fplvqs4k1bc1l64ib26u",
+      "method": "GET"
+    },
+    "next_url": null,
+    "next_url_post": null,
+    "events": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/96pha5fplvqs4k1bc1l64ib26u/events",
+      "method": "GET"
+    },
+    "refunds": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/96pha5fplvqs4k1bc1l64ib26u/refunds",
+      "method": "GET"
+    },
+    "cancel": null,
+    "capture": null
+  }
+}

@@ -12,22 +12,37 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreatePaymentResponse {
+public class PaymentResponse {
   @JsonProperty("payment_id")
   private String paymentId;
-
-  @JsonProperty("return_url")
-  private String returnUrl;
 
   @JsonProperty("created_date")
   private LocalDateTime createdDate;
 
+  private State state;
   private String nextUrl;
 
   @SuppressWarnings("unchecked")
   @JsonProperty("_links")
   private void unpackNested(Map<String, Object> links) {
     Map<String, String> nextLink = (Map<String, String>) links.get("next_url");
-    this.nextUrl = nextLink.get("href");
+    if (null != nextLink) {
+      this.nextUrl = nextLink.get("href");
+    }
+  }
+
+  public String getStatus() {
+    return null == state ? null : state.status;
+  }
+
+  public Boolean getFinished() {
+    return null == state ? null : state.finished;
+  }
+
+  @NoArgsConstructor
+  @Getter
+  private class State {
+    private String status;
+    private Boolean finished;
   }
 }

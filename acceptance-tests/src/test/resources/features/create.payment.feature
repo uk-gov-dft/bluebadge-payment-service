@@ -1,5 +1,5 @@
 @payments
-Feature: Verify creating payments
+Feature: Verify creating payments failures
 
   Background:
     * url baseUrl
@@ -10,22 +10,14 @@ Feature: Verify creating payments
     * def db = new DbUtils(dbConfig)
     * def setup = db.runScript('acceptance-test-data.sql')
 
-  Scenario: Payment creation
-    Given path 'payments'
-    And request {laShortCode:"BIRM", returnUrl:"http://test/return", paymentMessage:"Blue badge test"}
-    When method POST
-    And print response
-    Then status 200
-    And match $.data contains {paymentJourneyUuid:"#notnull", nextUrl:"#notnull"}
-
   Scenario: Payment creation - LA does not have payments enabled. Results in common response error.
     Given path 'payments'
-    And request {laShortCode:"ANGL", returnUrl:"http://", paymentMessage:"Blue badge test"}
+    And request {laShortCode:"CORN", returnUrl:"http://", paymentMessage:"Blue badge test"}
     When method POST
     Then status 503
     And print response
     And match $ contains {error:"#notnull"}
-    And match $.error.message contains "No GOV Pay profile found for LA: ANGL"
+    And match $.error.message contains "No GOV Pay profile found for LA: CORN"
 
   Scenario: GOV Pay api key invalid. Results in common response error.
     Given path 'payments'
@@ -54,7 +46,7 @@ Feature: Verify creating payments
     Then status 400
     And print response
     And match $ contains {error:"#notnull"}
-    And match $.error.errors[0].message contains "NotBlank.newPaymentDetails.laShortCode"
+    And match $.error.errors[0].message contains "NotBlank.newPaymentRequest.laShortCode"
 
   Scenario: Missing return URL
     Given path 'payments'
@@ -63,7 +55,7 @@ Feature: Verify creating payments
     Then status 400
     And print response
     And match $ contains {error:"#notnull"}
-    And match $.error.errors[0].message contains "NotBlank.newPaymentDetails.returnUrl"
+    And match $.error.errors[0].message contains "NotBlank.newPaymentRequest.returnUrl"
 
   Scenario: Missing payment message
     Given path 'payments'
@@ -72,4 +64,4 @@ Feature: Verify creating payments
     Then status 400
     And print response
     And match $ contains {error:"#notnull"}
-    And match $.error.errors[0].message contains "NotBlank.newPaymentDetails.paymentMessage"
+    And match $.error.errors[0].message contains "NotBlank.newPaymentRequest.paymentMessage"

@@ -5,12 +5,19 @@
 
     <insert id="createPayment" parameterType="PaymentEntity">
         INSERT INTO payment.payment
-        (payment_journey_uuid, payment_id, la_short_code, reference, cost)
+        (payment_journey_uuid, payment_id, la_short_code, reference, cost, status)
         VALUES (
         #{paymentJourneyUuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.payment.repository.UuidTypeHandler},
-        #{paymentId}, #{laShortCode}, #{reference},#{cost}
+        #{paymentId}, #{laShortCode}, #{reference},#{cost},#{status}
         )
     </insert>
+
+    <update id="updatePayment" parameterType="PaymentEntity">
+        UPDATE payment.payment set
+          status = #{status}
+        WHERE
+          payment_journey_uuid = #{paymentJourneyUuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.payment.repository.UuidTypeHandler}
+    </update>
 
     <resultMap id="paymentEntityMap" type="PaymentEntity">
         <result column="payment_journey_uuid" property="paymentJourneyUuid"
@@ -19,9 +26,10 @@
         <result column="la_short_code" property="laShortCode" />
         <result column="reference" property="reference" />
         <result column="cost" property="cost" />
+        <result column="status" property="status" />
     </resultMap>
     <select id="selectPaymentByUuid" resultType="PaymentEntity" resultMap="paymentEntityMap" parameterType="string" >
-        SELECT  payment_journey_uuid, payment_id, la_short_code, reference, cost
+        SELECT  payment_journey_uuid, payment_id, la_short_code, reference, cost, status
         FROM payment.payment
         WHERE payment_journey_uuid = #{paymentJourneyUuid}::UUID
     </select>

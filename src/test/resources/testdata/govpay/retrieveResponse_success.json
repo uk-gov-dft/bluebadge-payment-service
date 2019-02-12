@@ -1,0 +1,58 @@
+{
+  "amount": 1000,
+  "state": {
+    "status": "success",
+    "finished": true
+  },
+  "description": "Blue badge application fee",
+  "reference": "6N5TSG6CY8",
+  "email": "rakadakito@mailinator.com",
+  "language": "en",
+  "payment_id": "11djhtauo24deedv1fn67j1ph7",
+  "payment_provider": "sandbox",
+  "return_url": "https://products.payments.service.gov.uk/payment-complete/7e6d038171614c7695723b27cd126f26",
+  "created_date": "2019-01-30T10:44:34.992Z",
+  "refund_summary": {
+    "status": "available",
+    "amount_available": 1000,
+    "amount_submitted": 0
+  },
+  "settlement_summary": {
+    "capture_submit_time": "2019-01-30T10:44:55.285Z",
+    "captured_date": "2019-01-30"
+  },
+  "card_details": {
+    "last_digits_card_number": "1111",
+    "first_digits_card_number": "444433",
+    "cardholder_name": "Jade Sandoval",
+    "expiry_date": "06/20",
+    "billing_address": {
+      "line1": "Wayne Cantrell",
+      "line2": "Iure consequuntur excepturi facere a ex",
+      "postcode": "kj429jt",
+      "city": "427 West Rocky Clarendon Street",
+      "country": "GB"
+    },
+    "card_brand": "Visa"
+  },
+  "delayed_capture": false,
+  "card_brand": "Visa",
+  "_links": {
+    "self": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/11djhtauo24deedv1fn67j1ph7",
+      "method": "GET"
+    },
+    "next_url": null,
+    "next_url_post": null,
+    "events": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/11djhtauo24deedv1fn67j1ph7/events",
+      "method": "GET"
+    },
+    "refunds": {
+      "href": "https://publicapi.payments.service.gov.uk/v1/payments/11djhtauo24deedv1fn67j1ph7/refunds",
+      "method": "GET"
+    },
+    "cancel": null,
+    "capture": null
+  }
+}
