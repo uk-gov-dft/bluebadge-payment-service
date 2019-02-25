@@ -20,6 +20,7 @@ public class CommonResponseControllerAdvice extends CommonResponseEntityExceptio
   private static final String PAYMENT_SERVICE_EXCEPTION = "Payment Service Exception. {}";
 
   @SuppressWarnings("unused")
+  @Override
   @ExceptionHandler({ServiceException.class})
   public ResponseEntity<CommonResponse> handleServiceException(ServiceException e) {
     HttpStatus statusCode = e.getResponse().getStatusCode();
@@ -31,8 +32,9 @@ public class CommonResponseControllerAdvice extends CommonResponseEntityExceptio
     return e.getResponse();
   }
 
+  @Override
   @ExceptionHandler({Exception.class})
-  public ResponseEntity<CommonResponse> handleException(Exception e) {
+  public ResponseEntity<CommonResponse> handleUnexpectedException(Exception e) {
     log.error(PAYMENT_SERVICE_EXCEPTION, e.getMessage(), e);
     CommonResponse commonResponse = new CommonResponse();
     Error error = new Error();
