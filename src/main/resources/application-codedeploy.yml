@@ -5,6 +5,11 @@ blue-badge:
      ***REMOVED***
   payment:
     secretEnv: ${bb_env}
+  reference-data-service:
+    service-host:
+      host: reference-service.${bb_env}.${url}
+      port: 443
+      scheme: https
 
 management:
   server:
