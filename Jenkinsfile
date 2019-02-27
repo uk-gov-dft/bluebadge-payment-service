@@ -97,12 +97,14 @@ node {
             )
 
             timeout(time: 10, unit: 'MINUTES') {
-                try {
-                    sh 'bash -c "echo $PATH && cd acceptance-tests && ./run-regression.sh"'
-                }
-                finally {
-                    archiveArtifacts allowEmptyArchive: true, artifacts: '**/docker.log'
-                    junit '**/TEST*.xml'
+                withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
+                  try {
+                      sh 'bash -c "echo $PATH && cd acceptance-tests && ./run-regression.sh"'
+                  }
+                  finally {
+                      archiveArtifacts allowEmptyArchive: true, artifacts: '**/docker.log'
+                      junit '**/TEST*.xml'
+                  }
                 }
             }
         }
