@@ -99,7 +99,13 @@ node {
             timeout(time: 10, unit: 'MINUTES') {
                 withCredentials([string(credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN')]) {
                   try {
-                      sh 'bash -c "echo $PATH && cd acceptance-tests && ./run-regression.sh"'
+                      sh '''
+                        cd acceptance-tests
+                        curl -s -o run-regression-script.sh -H "Authorization: token ${GITHUB_TOKEN}" -H 'Accept: application/vnd.github.v3.raw' -O -L https://raw.githubusercontent.com/uk-gov-dft/shell-scripts/master/run-regression.sh
+
+                        chmod +x run-regression-script.sh
+                        ./run-regression-script.sh
+                      '''
                   }
                   finally {
                       archiveArtifacts allowEmptyArchive: true, artifacts: '**/docker.log'
