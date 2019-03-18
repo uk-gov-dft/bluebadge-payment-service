@@ -41,3 +41,5 @@ out
 acceptance-tests/target/
 VERSION-computed
 **/dev-env*
+*.log
+run-regression-script.sh
