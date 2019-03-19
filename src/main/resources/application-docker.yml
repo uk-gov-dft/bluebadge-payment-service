@@ -11,5 +11,5 @@ spring:
   main:
     banner-mode: "off"
   datasource:
-    url: jdbc:postgresql://postgresql:5432/bb_dev?currentSchema=payment
+    url: jdbc:postgresql://postgresql:5432/bb_dev?currentSchema=payment&sslmode=require
 
